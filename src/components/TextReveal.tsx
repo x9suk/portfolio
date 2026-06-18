@@ -6,35 +6,41 @@ import { motion, useInView } from "framer-motion";
 interface TextRevealProps {
   text: string;
   className?: string;
-  delay?: number;
-  as?: "h1" | "h2" | "h3" | "h4" | "span";
+  as?: "h1" | "h2" | "h3" | "p" | "span";
 }
 
-export default function TextReveal({ text, className = "", delay = 0, as: Tag = "h2" }: TextRevealProps) {
+export default function TextReveal({
+  text,
+  className = "",
+  as: Tag = "h2",
+}: TextRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   const words = text.split(" ");
 
   return (
-    <div ref={ref} className={className}>
-      <Tag className="inline-flex flex-wrap gap-x-[0.25em]">
-        {words.map((word, i) => (
+    <Tag className={className} ref={ref}>
+      {words.map((word, i) => (
+        <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
           <motion.span
-            key={i}
-            initial={{ opacity: 0, y: 30, rotateX: -40 }}
-            animate={isInView ? { opacity: 1, y: 0, rotateX: 0 } : {}}
+            className="inline-block"
+            initial={{ y: "100%", opacity: 0 }}
+            animate={
+              isInView
+                ? { y: 0, opacity: 1 }
+                : { y: "100%", opacity: 0 }
+            }
             transition={{
               duration: 0.5,
-              delay: delay + i * 0.05,
-              ease: [0.25, 0.25, 0.1, 1],
+              delay: i * 0.06,
+              ease: [0.25, 0.25, 0.25, 0.75],
             }}
-            className="inline-block"
           >
             {word}
           </motion.span>
-        ))}
-      </Tag>
-    </div>
+        </span>
+      ))}
+    </Tag>
   );
 }

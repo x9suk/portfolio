@@ -1,13 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Lenis from "lenis";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Skills from "@/components/Skills";
 import Projects from "@/components/Projects";
 import Experience from "@/components/Experience";
+import OpenSource from "@/components/OpenSource";
+import TechStack from "@/components/TechStack";
+import GitHubStats from "@/components/GitHubStats";
 import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
@@ -15,126 +19,161 @@ import GlowingOrbs from "@/components/GlowingOrbs";
 import ParticleBackground from "@/components/ParticleBackground";
 import CustomCursor from "@/components/CustomCursor";
 import ScrollProgress from "@/components/ScrollProgress";
-import SectionDivider from "@/components/SectionDivider";
 
-function LoadingScreen() {
-  const [frame, setFrame] = useState(0);
-  const messages = [
-    "INITIALIZING SYSTEMS",
-    "LOADING MODULES",
-    "ESTABLISHING CONNECTION",
-    "READY",
-  ];
+function LoadingScreen({ onComplete }: { onComplete: () => void }) {
+  const [progress, setProgress] = useState(0);
+  const [phase, setPhase] = useState(0);
 
   useEffect(() => {
-    const t = setInterval(() => setFrame((p) => (p >= 3 ? 3 : p + 1)), 400);
-    return () => clearInterval(t);
+    const interval = setInterval(() => {
+      setProgress((p) => {
+        if (p >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return p + 2;
+      });
+    }, 30);
+    return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (progress >= 100) {
+      setPhase(1);
+      setTimeout(() => onComplete(), 600);
+    }
+  }, [progress, onComplete]);
+
+  const messages = ["INITIALIZING", "LOADING ASSETS", "PREPARING", "READY"];
 
   return (
     <motion.div
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5, ease: "easeInOut" }}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-dark-500 overflow-hidden"
+      exit={{ opacity: 0, scale: 1.05 }}
+      transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-[#050510]"
     >
-      {/* scanning line */}
-      <motion.div
-        initial={{ top: "0%" }}
-        animate={{ top: "100%" }}
-        transition={{ duration: 1.8, repeat: Infinity, ease: "linear" }}
-        className="absolute left-0 right-0 h-px bg-neon-400/40 shadow-[0_0_8px_rgba(255,26,26,0.3)]"
-      />
+      <div className="absolute inset-0 grid-bg opacity-20" />
 
-      {/* corners */}
-      <div className="absolute top-8 left-8 w-12 h-12 border-l-2 border-t-2 border-neon-400/20" />
-      <div className="absolute top-8 right-8 w-12 h-12 border-r-2 border-t-2 border-neon-400/20" />
-      <div className="absolute bottom-8 left-8 w-12 h-12 border-l-2 border-b-2 border-neon-400/20" />
-      <div className="absolute bottom-8 right-8 w-12 h-12 border-r-2 border-b-2 border-neon-400/20" />
+      <div className="absolute top-8 left-8 w-16 h-16 border-l border-t border-red-400/10" />
+      <div className="absolute top-8 right-8 w-16 h-16 border-r border-t border-red-400/10" />
+      <div className="absolute bottom-8 left-8 w-16 h-16 border-l border-b border-red-400/10" />
+      <div className="absolute bottom-8 right-8 w-16 h-16 border-r border-b border-red-400/10" />
 
-      <div className="relative flex flex-col items-center gap-8">
-        {/* rings */}
-        <div className="relative flex items-center justify-center">
+      <div className="relative flex flex-col items-center gap-10">
+        <div className="relative">
           <motion.div
-            className="absolute w-32 h-32 border border-neon-400/10 rounded-full"
+            className="absolute -inset-8 rounded-full border border-red-400/5"
             animate={{ rotate: 360 }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
           />
           <motion.div
-            className="absolute w-24 h-24 border border-neon-400/20 rounded-full"
+            className="absolute -inset-12 rounded-full border border-red-400/5"
             animate={{ rotate: -360 }}
-            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
           />
           <motion.div
-            className="absolute w-16 h-16 border border-neon-400/30 rounded-full"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-          />
-          <motion.div
-            className="w-3 h-3 bg-neon-400 rounded-full shadow-[0_0_12px_rgba(255,26,26,0.6)]"
-            animate={{ scale: [1, 1.3, 1] }}
-            transition={{ duration: 1, repeat: Infinity }}
-          />
+            className="w-20 h-20 rounded-full flex items-center justify-center"
+            style={{
+              background: "radial-gradient(circle, rgba(255,45,85,0.15), transparent)",
+              boxShadow: "0 0 60px rgba(255,45,85,0.1)",
+            }}
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ duration: 3, repeat: Infinity }}
+          >
+            <span className="text-3xl font-bold text-gradient">A</span>
+          </motion.div>
         </div>
 
-        {/* status */}
-        <div className="text-center">
-          <motion.p
-            key={frame}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-sm font-mono text-neon-300 tracking-[0.25em]"
-          >
-            {messages[Math.min(frame, messages.length - 1)]}
-          </motion.p>
+        <div className="w-64 flex flex-col items-center gap-4">
+          <div className="w-full h-[2px] bg-white/5 rounded-full overflow-hidden">
+            <motion.div
+              className="h-full rounded-full"
+              style={{
+                width: `${progress}%`,
+                background: "linear-gradient(90deg, #ff2d55, #ff6b8a)",
+                boxShadow: "0 0 20px rgba(255,45,85,0.5)",
+              }}
+            />
+          </div>
+          <div className="flex justify-between w-full">
+            <span className="text-[10px] font-mono text-white/20 tracking-[0.2em]">
+              {messages[Math.min(Math.floor(progress / 25), 3)]}
+            </span>
+            <span className="text-[10px] font-mono text-red-400/40">
+              {progress}%
+            </span>
+          </div>
         </div>
       </div>
     </motion.div>
   );
 }
 
-export default function Home() {
-  const [loading, setLoading] = useState(true);
+function SmoothScrollProvider({ children }: { children: ReactNode }) {
+  const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1800);
-    return () => clearTimeout(timer);
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+
+    lenisRef.current = lenis;
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
   }, []);
+
+  return <>{children}</>;
+}
+
+export default function Home() {
+  const [loading, setLoading] = useState(true);
 
   return (
     <>
       <AnimatePresence mode="wait">
-        {loading && <LoadingScreen key="loader" />}
+        {loading && (
+          <LoadingScreen key="loader" onComplete={() => setLoading(false)} />
+        )}
       </AnimatePresence>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: loading ? 0 : 1 }}
-        transition={{ duration: 0.5 }}
-        className="relative min-h-screen"
-      >
-        <ScrollProgress />
-        <GlowingOrbs />
-        <ParticleBackground />
-        <CustomCursor />
-        <Navbar />
-        <main className="relative z-10">
-          <Hero />
-          <SectionDivider />
-          <About />
-          <SectionDivider />
-          <Skills />
-          <SectionDivider />
-          <Projects />
-          <SectionDivider />
-          <Experience />
-          <SectionDivider />
-          <Testimonials />
-          <SectionDivider />
-          <Contact />
-        </main>
-        <Footer />
-      </motion.div>
+      <SmoothScrollProvider>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: loading ? 0 : 1 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="relative"
+        >
+          <ScrollProgress />
+          <GlowingOrbs />
+          <ParticleBackground />
+          <CustomCursor />
+          <Navbar />
+          <main className="relative z-10">
+            <Hero />
+            <About />
+            <Skills />
+            <Projects />
+            <Experience />
+            <OpenSource />
+            <TechStack />
+            <GitHubStats />
+            <Testimonials />
+            <Contact />
+          </main>
+          <Footer />
+        </motion.div>
+      </SmoothScrollProvider>
     </>
   );
 }

@@ -1,44 +1,62 @@
 "use client";
 
-import { useRef, type ReactNode, type MouseEvent } from "react";
+import { useRef, ReactNode, useState, useEffect } from "react";
 
 interface TiltProps {
   children: ReactNode;
   className?: string;
-  maxTilt?: number;
-  scale?: number;
-  glare?: boolean;
+  intensity?: number;
 }
 
-export default function Tilt({ children, className = "", maxTilt = 8, scale = 1.02 }: TiltProps) {
+export default function Tilt({
+  children,
+  className = "",
+  intensity = 10,
+}: TiltProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const [transform, setTransform] = useState("perspective(1000px) rotateX(0deg) rotateY(0deg)");
+  const [isHovered, setIsHovered] = useState(false);
 
-  const handleMouse = (e: MouseEvent<HTMLDivElement>) => {
+  useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const midX = rect.width / 2;
-    const midY = rect.height / 2;
-    const tiltY = ((x - midX) / midX) * maxTilt;
-    const tiltX = ((y - midY) / midY) * -maxTilt;
-    el.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(${scale},${scale},${scale})`;
-  };
 
-  const handleLeave = () => {
-    const el = ref.current;
-    if (!el) return;
-    el.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)";
-  };
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isHovered) return;
+      const rect = el.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      setTransform(
+        `perspective(1000px) rotateX(${-y * intensity}deg) rotateY(${x * intensity}deg) scale3d(1.02, 1.02, 1.02)`
+      );
+    };
+
+    const handleMouseLeave = () => {
+      setIsHovered(false);
+      setTransform("perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)");
+    };
+
+    el.addEventListener("mousemove", handleMouseMove);
+    el.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      el.removeEventListener("mousemove", handleMouseMove);
+      el.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [isHovered, intensity]);
 
   return (
     <div
       ref={ref}
-      onMouseMove={handleMouse}
-      onMouseLeave={handleLeave}
-      className={`transition-transform duration-200 ease-out ${className}`}
-      style={{ transformStyle: "preserve-3d" }}
+      className={className}
+      style={{
+        transform,
+        transition: isHovered
+          ? "transform 0.1s ease-out"
+          : "transform 0.5s ease-out",
+        transformStyle: "preserve-3d",
+      }}
+      onMouseEnter={() => setIsHovered(true)}
     >
       {children}
     </div>

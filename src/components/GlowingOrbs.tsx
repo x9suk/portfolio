@@ -1,64 +1,54 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-interface Orb {
-  id: number;
-  size: number;
-  x: number;
-  y: number;
-  blur: number;
-  opacity: number;
-  color: string;
-  animationDuration: number;
-  animationDelay: number;
-}
+import { motion } from "framer-motion";
 
 export default function GlowingOrbs() {
-  const [orbs, setOrbs] = useState<Orb[]>([]);
-
-  useEffect(() => {
-    const colors = [
-      "rgba(255, 26, 26, 0.15)",
-      "rgba(255, 51, 102, 0.1)",
-      "rgba(255, 102, 51, 0.1)",
-      "rgba(204, 0, 0, 0.12)",
-    ];
-
-    const generated: Orb[] = Array.from({ length: 6 }, (_, i) => ({
-      id: i,
-      size: Math.random() * 400 + 200,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      blur: Math.random() * 60 + 80,
-      opacity: Math.random() * 0.3 + 0.1,
-      color: colors[i % colors.length],
-      animationDuration: Math.random() * 6 + 8,
-      animationDelay: Math.random() * -5,
-    }));
-
-    setOrbs(generated);
-  }, []);
-
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-      {orbs.map((orb) => (
-        <div
-          key={orb.id}
-          className="absolute rounded-full"
-          style={{
-            width: orb.size,
-            height: orb.size,
-            left: `${orb.x}%`,
-            top: `${orb.y}%`,
-            background: `radial-gradient(circle at center, ${orb.color}, transparent 70%)`,
-            filter: `blur(${orb.blur}px)`,
-            opacity: orb.opacity,
-            animation: `orb ${orb.animationDuration}s ease-in-out ${orb.animationDelay}s infinite`,
-            transform: "translate(-50%, -50%)",
-          }}
-        />
-      ))}
+    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+      <motion.div
+        className="absolute w-[500px] h-[500px] rounded-full"
+        style={{
+          background: "radial-gradient(circle, rgba(255,45,85,0.08), transparent 70%)",
+          top: "10%",
+          right: "-10%",
+          filter: "blur(80px)",
+        }}
+        animate={{
+          x: [0, 50, -30, 0],
+          y: [0, -80, 40, 0],
+          scale: [1, 1.1, 0.9, 1],
+        }}
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute w-[400px] h-[400px] rounded-full"
+        style={{
+          background: "radial-gradient(circle, rgba(255,45,85,0.05), transparent 70%)",
+          bottom: "20%",
+          left: "-5%",
+          filter: "blur(60px)",
+        }}
+        animate={{
+          x: [0, -40, 30, 0],
+          y: [0, 60, -50, 0],
+          scale: [1, 0.9, 1.15, 1],
+        }}
+        transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute w-[300px] h-[300px] rounded-full"
+        style={{
+          background: "radial-gradient(circle, rgba(139,92,246,0.04), transparent 70%)",
+          top: "50%",
+          left: "40%",
+          filter: "blur(50px)",
+        }}
+        animate={{
+          x: [0, 30, -20, 0],
+          y: [0, -40, 30, 0],
+        }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+      />
     </div>
   );
 }

@@ -1,157 +1,139 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import ScrollReveal from "./ScrollReveal";
 import TextReveal from "./TextReveal";
 import {
-  FaReact,
-  FaNodeJs,
-  FaPython,
-  FaDocker,
-  FaGitAlt,
-  FaAws,
+  FaReact, FaNodeJs, FaPython, FaDocker, FaGitAlt, FaAws,
 } from "react-icons/fa";
 import {
-  SiTypescript,
-  SiMongodb,
-  SiPostgresql,
-  SiRedis,
-  SiTailwindcss,
-  SiNextdotjs,
-  SiJavascript,
-  SiPrisma,
-  SiDiscord,
-  SiSocketdotio,
+  SiTypescript, SiMongodb, SiPostgresql, SiRedis, SiTailwindcss,
+  SiNextdotjs, SiJavascript, SiPrisma, SiDiscord, SiExpress,
 } from "react-icons/si";
-import { FiTerminal } from "react-icons/fi";
 
-interface Planet {
+interface Tech {
   name: string;
   icon: React.ElementType;
-  orbitRadius: number;
-  duration: number;
+  orbit: number;
+  speed: number;
   size: number;
   offset: number;
   color: string;
 }
 
-const planets: Planet[] = [
-  { name: "React", icon: FaReact, orbitRadius: 140, duration: 12, size: 36, offset: 0, color: "#61DAFB" },
-  { name: "Next.js", icon: SiNextdotjs, orbitRadius: 140, duration: 12, size: 32, offset: 180, color: "#fff" },
-  { name: "Node.js", icon: FaNodeJs, orbitRadius: 190, duration: 16, size: 34, offset: 30, color: "#339933" },
-  { name: "TypeScript", icon: SiTypescript, orbitRadius: 190, duration: 16, size: 30, offset: 210, color: "#3178C6" },
-  { name: "MongoDB", icon: SiMongodb, orbitRadius: 240, duration: 20, size: 32, offset: 60, color: "#47A248" },
-  { name: "Python", icon: FaPython, orbitRadius: 240, duration: 20, size: 30, offset: 240, color: "#3776AB" },
-  { name: "Docker", icon: FaDocker, orbitRadius: 290, duration: 25, size: 34, offset: 90, color: "#2496ED" },
-  { name: "PostgreSQL", icon: SiPostgresql, orbitRadius: 290, duration: 25, size: 28, offset: 270, color: "#4169E1" },
-  { name: "Redis", icon: SiRedis, orbitRadius: 330, duration: 30, size: 28, offset: 120, color: "#DC382D" },
-  { name: "Tailwind", icon: SiTailwindcss, orbitRadius: 330, duration: 30, size: 28, offset: 300, color: "#06B6D4" },
-  { name: "JavaScript", icon: SiJavascript, orbitRadius: 100, duration: 9, size: 30, offset: 90, color: "#F7DF1E" },
-  { name: "Express", icon: FiTerminal, orbitRadius: 100, duration: 9, size: 26, offset: 270, color: "#fff" },
-  { name: "Prisma", icon: SiPrisma, orbitRadius: 370, duration: 35, size: 28, offset: 150, color: "#2D3748" },
-  { name: "AWS", icon: FaAws, orbitRadius: 370, duration: 35, size: 30, offset: 330, color: "#FF9900" },
-  { name: "Discord.js", icon: SiDiscord, orbitRadius: 220, duration: 18, size: 32, offset: 150, color: "#5865F2" },
-  { name: "Git", icon: FaGitAlt, orbitRadius: 220, duration: 18, size: 30, offset: 330, color: "#F05032" },
+const techs: Tech[] = [
+  { name: "Discord.py", icon: SiDiscord, orbit: 130, speed: 14, size: 34, offset: 0, color: "#5865F2" },
+  { name: "Node.js", icon: FaNodeJs, orbit: 130, speed: 14, size: 32, offset: 180, color: "#339933" },
+  { name: "Next.js", icon: SiNextdotjs, orbit: 180, speed: 18, size: 30, offset: 45, color: "#ffffff" },
+  { name: "TypeScript", icon: SiTypescript, orbit: 180, speed: 18, size: 28, offset: 225, color: "#3178C6" },
+  { name: "Python", icon: FaPython, orbit: 230, speed: 22, size: 30, offset: 90, color: "#3776AB" },
+  { name: "Redis", icon: SiRedis, orbit: 230, speed: 22, size: 26, offset: 270, color: "#DC382D" },
+  { name: "MongoDB", icon: SiMongodb, orbit: 280, speed: 28, size: 28, offset: 30, color: "#47A248" },
+  { name: "Docker", icon: FaDocker, orbit: 280, speed: 28, size: 30, offset: 210, color: "#2496ED" },
+  { name: "React", icon: FaReact, orbit: 330, speed: 32, size: 30, offset: 135, color: "#61DAFB" },
+  { name: "Express", icon: SiExpress, orbit: 330, speed: 32, size: 26, offset: 315, color: "#ffffff" },
+  { name: "AWS", icon: FaAws, orbit: 100, speed: 12, size: 28, offset: 60, color: "#FF9900" },
+  { name: "Git", icon: FaGitAlt, orbit: 100, speed: 12, size: 26, offset: 240, color: "#F05032" },
+  { name: "Tailwind", icon: SiTailwindcss, orbit: 370, speed: 36, size: 26, offset: 160, color: "#06B6D4" },
+  { name: "PostgreSQL", icon: SiPostgresql, orbit: 370, speed: 36, size: 26, offset: 340, color: "#4169E1" },
+  { name: "Prisma", icon: SiPrisma, orbit: 370, speed: 36, size: 24, offset: 70, color: "#2D3748" },
+  { name: "JavaScript", icon: SiJavascript, orbit: 60, speed: 10, size: 26, offset: 120, color: "#F7DF1E" },
 ];
 
-function PlanetOrbit({ planet, index }: { planet: Planet; index: number }) {
-  const Icon = planet.icon;
-  const [angle, setAngle] = useState(planet.offset);
+function TechOrbit({ tech }: { tech: Tech }) {
+  const [angle, setAngle] = useState(tech.offset);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setAngle((prev) => (prev + 0.3) % 360);
-    }, planet.duration * 8);
+      setAngle((prev) => (prev + 0.25) % 360);
+    }, tech.speed * 6);
     return () => clearInterval(interval);
-  }, [planet.duration]);
+  }, [tech.speed]);
 
   const rad = (angle * Math.PI) / 180;
-  const x = Math.cos(rad) * planet.orbitRadius;
-  const y = Math.sin(rad) * planet.orbitRadius;
+  const x = Math.cos(rad) * tech.orbit;
+  const y = Math.sin(rad) * tech.orbit;
 
   return (
-    <div
-      className="absolute left-1/2 top-1/2 planet-item"
+    <motion.div
+      className="absolute left-1/2 top-1/2 group"
       style={{
         transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
       }}
+      whileHover={{ scale: 1.4 }}
     >
-      <motion.div
-        whileHover={{ scale: 1.3 }}
-        className="rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer planet-icon"
+      <div
+        className="rounded-full flex items-center justify-center cursor-pointer transition-all duration-300"
         style={{
-          width: planet.size,
-          height: planet.size,
-          background: `${planet.color}15`,
-          border: `1px solid ${planet.color}30`,
-          boxShadow: `0 0 12px ${planet.color}10`,
+          width: tech.size,
+          height: tech.size,
+          background: `${tech.color}10`,
+          border: `1px solid ${tech.color}25`,
+          boxShadow: `0 0 15px ${tech.color}08`,
         }}
       >
-        <Icon
-          style={{ color: planet.color, fontSize: planet.size * 0.55 }}
-        />
-      </motion.div>
-      <span className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 text-[10px] font-mono text-white/40 whitespace-nowrap pointer-events-none planet-label">
-        {planet.name}
+        <tech.icon style={{ color: tech.color, fontSize: tech.size * 0.5 }} />
+      </div>
+      <span className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 text-[9px] font-mono text-white/30 whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+        {tech.name}
       </span>
-    </div>
+    </motion.div>
   );
 }
 
 export default function Skills() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
   return (
-    <section id="skills" className="section-padding relative" ref={sectionRef}>
+    <section id="skills" className="section-padding relative">
       <div className="container-custom">
         <ScrollReveal>
           <div className="text-center mb-16">
-            <span className="text-xs font-mono text-neon-200 tracking-widest uppercase">
+            <span className="text-xs font-mono text-red-400/60 tracking-[0.25em] uppercase block mb-3">
               Skills & Expertise
             </span>
-            <TextReveal text="Tech Stack" className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-3 mb-4 text-gradient" as="h2" />
-            <p className="text-white/50 max-w-2xl mx-auto text-sm sm:text-base">
-              Technologies I work with on a daily basis
+            <TextReveal
+              text="Tech Stack"
+              className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-4 text-gradient-white"
+              as="h2"
+            />
+            <p className="text-white/30 max-w-xl mx-auto text-sm sm:text-base">
+              Technologies I work with daily
             </p>
           </div>
         </ScrollReveal>
 
         <div className="flex justify-center">
-          <div className="relative w-[780px] h-[780px] max-w-full max-h-[90vw]">
-            {/* orbit rings */}
-            {[100, 140, 190, 220, 240, 290, 330, 370].map((r, i) => (
+          <div className="relative w-[700px] h-[700px] max-w-full max-h-[90vw]">
+            {[60, 100, 130, 180, 230, 280, 330, 370].map((r, i) => (
               <div
                 key={i}
                 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border pointer-events-none"
                 style={{
                   width: r * 2,
                   height: r * 2,
-                  borderColor: `rgba(255, 26, 26, ${0.03 + i * 0.01})`,
+                  borderColor: `rgba(255, 45, 85, ${0.02 + i * 0.005})`,
                 }}
               />
             ))}
 
-            {/* center sun */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
               <motion.div
                 animate={{ scale: [1, 1.05, 1] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className="flex flex-col items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-full"
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="flex flex-col items-center justify-center w-20 h-20 rounded-full"
                 style={{
-                  background: "radial-gradient(circle at center, rgba(255,26,26,0.2), transparent)",
-                  boxShadow: "0 0 40px rgba(255,26,26,0.15), 0 0 80px rgba(255,26,26,0.05)",
-                  border: "1px solid rgba(255,26,26,0.15)",
+                  background: "radial-gradient(circle, rgba(255,45,85,0.15), transparent)",
+                  boxShadow: "0 0 50px rgba(255,45,85,0.1)",
+                  border: "1px solid rgba(255,45,85,0.1)",
                 }}
               >
-                <span className="text-xl sm:text-2xl font-bold text-white">D</span>
-                <span className="text-[10px] font-mono text-neon-200/60">dev</span>
+                <span className="text-xl font-bold text-white">AP</span>
+                <span className="text-[8px] font-mono text-red-400/40 tracking-wider">dev</span>
               </motion.div>
             </div>
 
-            {/* planets */}
-            {planets.map((planet, i) => (
-              <PlanetOrbit key={planet.name} planet={planet} index={i} />
+            {techs.map((tech) => (
+              <TechOrbit key={tech.name} tech={tech} />
             ))}
           </div>
         </div>

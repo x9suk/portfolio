@@ -1,95 +1,80 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { FiArrowUp } from "react-icons/fi";
+import { motion } from "framer-motion";
+import { FiGithub, FiHeart } from "react-icons/fi";
+import { FaDiscord } from "react-icons/fa";
 
-const footerLinks = [
-  { href: "#about", label: "About" },
-  { href: "#skills", label: "Skills" },
-  { href: "#projects", label: "Projects" },
-  { href: "#experience", label: "Experience" },
-  { href: "#testimonials", label: "Testimonials" },
-  { href: "#contact", label: "Contact" },
+const links = [
+  { label: "About", href: "#about" },
+  { label: "Skills", href: "#skills" },
+  { label: "Projects", href: "#projects" },
+  { label: "Experience", href: "#experience" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export default function Footer() {
-  const [showBackToTop, setShowBackToTop] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 400);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const scrollTo = (href: string) => {
-    const el = document.querySelector(href);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   return (
-    <>
-      <footer className="relative border-t border-white/5 bg-dark-400/50 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="text-center md:text-left">
-              <button
-                onClick={scrollToTop}
-                className="text-2xl font-bold tracking-tight"
-              >
-                <span className="text-white">D</span>
-                <span className="text-neon-400">.</span>
-              </button>
-              <p className="text-sm text-white/30 mt-2">
-                Full-Stack Developer
-              </p>
-            </div>
+    <footer className="relative border-t border-white/[0.03]">
+      <div className="container-custom py-12 px-4 sm:px-6 lg:px-8">
+        <div className="grid md:grid-cols-3 gap-8 items-center">
+          <div>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="text-xl font-bold tracking-tight"
+            >
+              <span className="text-white">A</span>
+              <span className="text-red-400">.</span>
+            </button>
+            <p className="text-xs text-white/25 mt-2 max-w-xs">
+              Crafting premium digital experiences with clean code and modern design.
+            </p>
+          </div>
 
-            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-              {footerLinks.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => scrollTo(link.href)}
-                  className="text-sm text-white/40 hover:text-white/80 transition-colors"
+          <div className="flex justify-center">
+            <div className="flex gap-6">
+              {links.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="text-xs text-white/25 hover:text-white/60 transition-colors"
                 >
                   {link.label}
-                </button>
+                </a>
               ))}
             </div>
           </div>
 
-          <div className="mt-8 pt-8 border-t border-white/5 text-center">
-            <p className="text-xs text-white/20">
-              &copy; {new Date().getFullYear()} Dusk. All rights
-              reserved.
-            </p>
+          <div className="flex justify-end gap-3">
+            <a
+              href="https://github.com/x9suk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-9 h-9 rounded-xl bg-white/[0.03] border border-white/[0.04] flex items-center justify-center text-white/25 hover:text-white/60 hover:bg-white/[0.05] transition-all"
+            >
+              <FiGithub size={14} />
+            </a>
+            <a
+              href="https://discord.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-9 h-9 rounded-xl bg-white/[0.03] border border-white/[0.04] flex items-center justify-center text-white/25 hover:text-white/60 hover:bg-white/[0.05] transition-all"
+            >
+              <FaDiscord size={14} />
+            </a>
           </div>
         </div>
-      </footer>
 
-      <AnimatePresence>
-        {showBackToTop && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.5, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.5, y: 20 }}
-            transition={{ duration: 0.2 }}
-            onClick={scrollToTop}
-            className="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-xl bg-neon-400/20 border border-neon-400/30 backdrop-blur-md flex items-center justify-center text-neon-200 hover:bg-neon-400/30 hover:text-white transition-all duration-300 shadow-lg shadow-neon-400/10"
-            aria-label="Back to top"
-          >
-            <FiArrowUp size={20} />
-          </motion.button>
-        )}
-      </AnimatePresence>
-    </>
+        <div className="neon-line mt-8 mb-6" />
+
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-[11px] text-white/15 font-mono">
+            &copy; {new Date().getFullYear()} Ashish Pramanik. All rights reserved.
+          </p>
+          <p className="text-[11px] text-white/15 flex items-center gap-1">
+            Built with <FiHeart className="text-red-400/40" size={10} /> using Next.js
+          </p>
+        </div>
+      </div>
+    </footer>
   );
 }

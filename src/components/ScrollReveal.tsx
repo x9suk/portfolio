@@ -1,77 +1,46 @@
 "use client";
 
 import { useRef, ReactNode } from "react";
-import { motion, useInView, Variant } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 
 interface ScrollRevealProps {
   children: ReactNode;
-  className?: string;
   delay?: number;
-  direction?: "up" | "down" | "left" | "right" | "none";
-  duration?: number;
-  once?: boolean;
-  distance?: number;
+  direction?: "up" | "down" | "left" | "right";
+  className?: string;
 }
 
 export default function ScrollReveal({
   children,
-  className = "",
   delay = 0,
   direction = "up",
-  duration = 0.6,
-  once = true,
-  distance = 60,
+  className = "",
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once, margin: "-80px" });
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
 
-  const getVariants = (): { hidden: Variant; visible: Variant } => {
-    const hidden: Variant = { opacity: 0, filter: "blur(4px)" };
-    const visible: Variant = { opacity: 1, filter: "blur(0px)" };
-
-    switch (direction) {
-      case "up":
-        hidden.y = distance;
-        visible.y = 0;
-        break;
-      case "down":
-        hidden.y = -distance;
-        visible.y = 0;
-        break;
-      case "left":
-        hidden.x = distance;
-        visible.x = 0;
-        break;
-      case "right":
-        hidden.x = -distance;
-        visible.x = 0;
-        break;
-      case "none":
-        hidden.scale = 0.95;
-        visible.scale = 1;
-        break;
-    }
-
-    return { hidden, visible };
+  const dirMap = {
+    up: { y: 40, x: 0 },
+    down: { y: -40, x: 0 },
+    left: { y: 0, x: 40 },
+    right: { y: 0, x: -40 },
   };
 
-  const { hidden, visible } = getVariants();
+  const { x, y } = dirMap[direction];
 
   return (
     <motion.div
       ref={ref}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      variants={{
-        hidden,
-        visible: {
-          ...visible,
-          transition: {
-            duration,
-            delay,
-            ease: [0.25, 0.25, 0.25, 0.75] as [number, number, number, number],
-          },
-        },
+      initial={{ opacity: 0, x, y, filter: "blur(8px)" }}
+      animate={
+        isInView
+          ? { opacity: 1, x: 0, y: 0, filter: "blur(0px)" }
+          : { opacity: 0, x, y, filter: "blur(8px)" }
+      }
+      transition={{
+        duration: 0.7,
+        delay,
+        ease: [0.25, 0.25, 0.25, 0.75],
       }}
       className={className}
     >

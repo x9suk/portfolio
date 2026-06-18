@@ -10,37 +10,37 @@ const testimonials = [
   {
     id: 1,
     name: "Arjun Mehta",
-    role: "Startup Founder",
-    avatar: "AM",
+    role: "Community Manager",
+    initials: "AM",
     content:
-      "Dusk delivered an exceptional Discord bot for our community. The code quality, documentation, and support were top-notch. Highly recommended for any serious project.",
+      "Ashish delivered an exceptional Discord bot for our community. The code quality, documentation, and support were top-notch. Highly recommended.",
     rating: 5,
   },
   {
     id: 2,
     name: "Priya Sharma",
-    role: "Product Manager",
-    avatar: "PS",
+    role: "Startup Founder",
+    initials: "PS",
     content:
-      "Working with Dusk was a pleasure. He understood our requirements perfectly and delivered a beautiful, performant web application ahead of schedule.",
+      "Working with Ashish was a pleasure. He understood our requirements perfectly and delivered a beautiful, performant web application ahead of schedule.",
     rating: 5,
   },
   {
     id: 3,
     name: "Rohit Verma",
     role: "Tech Lead",
-    avatar: "RV",
+    initials: "RV",
     content:
-      "The dashboard Dusk built for us handles thousands of concurrent users with ease. His attention to performance and scalability is impressive.",
+      "The dashboard Ashish built for us handles thousands of concurrent users with ease. His attention to performance and scalability is impressive.",
     rating: 5,
   },
   {
     id: 4,
     name: "Ananya Patel",
-    role: "Discord Community Manager",
-    avatar: "AN",
+    role: "Discord Admin",
+    initials: "AP",
     content:
-      "Our server has never been more organized. The moderation bot Dusk created transformed how we manage our 50K+ member community.",
+      "Our server has never been more organized. The moderation bot Ashish created transformed how we manage our 50K+ member community.",
     rating: 5,
   },
 ];
@@ -48,24 +48,6 @@ const testimonials = [
 export default function Testimonials() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
-
-  const slideVariants = {
-    enter: (dir: number) => ({
-      x: dir > 0 ? 300 : -300,
-      opacity: 0,
-      scale: 0.95,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      scale: 1,
-    },
-    exit: (dir: number) => ({
-      x: dir > 0 ? -300 : 300,
-      opacity: 0,
-      scale: 0.95,
-    }),
-  };
 
   const paginate = (newDir: number) => {
     setDirection(newDir);
@@ -84,49 +66,46 @@ export default function Testimonials() {
       <div className="container-custom">
         <ScrollReveal>
           <div className="text-center mb-16">
-            <span className="text-xs font-mono text-neon-200 tracking-widest uppercase">
+            <span className="text-xs font-mono text-red-400/60 tracking-[0.25em] uppercase block mb-3">
               Testimonials
             </span>
-            <TextReveal text="What People Say" className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-3 mb-4 text-gradient" as="h2" />
-            <p className="text-white/50 max-w-2xl mx-auto text-sm sm:text-base">
-              Feedback from clients and collaborators
-            </p>
+            <TextReveal
+              text="What People Say"
+              className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-4 text-gradient-white"
+              as="h2"
+            />
           </div>
         </ScrollReveal>
 
         <div className="max-w-2xl mx-auto">
-          <div className="relative overflow-hidden rounded-3xl glass p-6 sm:p-10 min-h-[280px] sm:min-h-[240px]">
+          <div className="glass-card rounded-3xl p-6 sm:p-10 min-h-[280px] sm:min-h-[240px]">
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={current}
                 custom={direction}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
+                initial={{ x: direction > 0 ? 200 : -200, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: direction > 0 ? -200 : 200, opacity: 0 }}
                 transition={{ duration: 0.35, ease: "easeInOut" }}
                 className="flex flex-col items-center text-center"
               >
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-neon-400 to-accent-orange flex items-center justify-center text-white font-bold text-lg mb-5 shadow-lg shadow-neon-400/20">
-                  {t.avatar}
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white font-bold text-sm mb-4 shadow-lg shadow-red-400/20">
+                  {t.initials}
                 </div>
 
                 <div className="flex gap-1 mb-4">
                   {Array.from({ length: t.rating }).map((_, i) => (
-                    <FiStar
-                      key={i}
-                      className="w-4 h-4 fill-neon-200 text-neon-200"
-                    />
+                    <FiStar key={i} className="w-3.5 h-3.5 fill-red-400 text-red-400" />
                   ))}
                 </div>
 
-                <p className="text-white/60 text-sm sm:text-base leading-relaxed mb-6 max-w-lg">
+                <p className="text-white/40 text-sm leading-relaxed mb-6 max-w-lg">
                   &ldquo;{t.content}&rdquo;
                 </p>
 
                 <div>
-                  <h4 className="font-semibold text-white">{t.name}</h4>
-                  <p className="text-xs text-white/40">{t.role}</p>
+                  <h4 className="font-semibold text-white/80 text-sm">{t.name}</h4>
+                  <p className="text-[11px] text-white/25">{t.role}</p>
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -134,13 +113,12 @@ export default function Testimonials() {
             <div className="flex items-center justify-center gap-3 mt-8">
               <button
                 onClick={() => paginate(-1)}
-                className="p-2 rounded-xl border border-white/5 bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-all"
-                aria-label="Previous"
+                className="p-2 rounded-xl border border-white/[0.04] bg-white/[0.02] text-white/30 hover:text-white hover:bg-white/[0.05] transition-all"
               >
-                <FiChevronLeft size={20} />
+                <FiChevronLeft size={18} />
               </button>
 
-              <div className="flex gap-2">
+              <div className="flex gap-1.5">
                 {testimonials.map((_, i) => (
                   <button
                     key={i}
@@ -148,22 +126,18 @@ export default function Testimonials() {
                       setDirection(i > current ? 1 : -1);
                       setCurrent(i);
                     }}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      i === current
-                        ? "bg-neon-400 w-6"
-                        : "bg-white/20 hover:bg-white/40"
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      i === current ? "bg-red-400 w-6" : "bg-white/10 hover:bg-white/20 w-1.5"
                     }`}
-                    aria-label={`Go to testimonial ${i + 1}`}
                   />
                 ))}
               </div>
 
               <button
                 onClick={() => paginate(1)}
-                className="p-2 rounded-xl border border-white/5 bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-all"
-                aria-label="Next"
+                className="p-2 rounded-xl border border-white/[0.04] bg-white/[0.02] text-white/30 hover:text-white hover:bg-white/[0.05] transition-all"
               >
-                <FiChevronRight size={20} />
+                <FiChevronRight size={18} />
               </button>
             </div>
           </div>

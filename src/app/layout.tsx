@@ -1,40 +1,38 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+
 export const metadata: Metadata = {
-  title: "Dusk | Full-Stack Developer",
+  title: "Ashish Pramanik | Discord Bot Developer & Full-Stack Creator",
   description:
-    "Full-stack developer building modern web apps, REST APIs, and Discord bots with clean code and premium design.",
+    "Discord Bot Developer, Backend Architect & Open Source Creator. Building premium bots, scalable APIs, and modern web experiences.",
   keywords: [
-    "full-stack developer",
-    "web developer",
-    "api developer",
-    "discord bot developer",
-    "react developer",
-    "next.js",
-    "typescript",
-    "node.js",
-    "portfolio",
-    "dusk",
+    "Ashish Pramanik",
+    "Discord Bot Developer",
+    "Full-Stack Developer",
+    "Next.js",
+    "TypeScript",
+    "Python",
+    "Open Source",
+    "Portfolio",
   ],
-  authors: [{ name: "Dusk" }],
+  authors: [{ name: "Ashish Pramanik" }],
   openGraph: {
-    title: "Dusk | Full-Stack Developer",
+    title: "Ashish Pramanik | Discord Bot Developer & Full-Stack Creator",
     description:
-      "Full-stack developer building modern web apps, REST APIs, and Discord bots.",
+      "Discord Bot Developer, Backend Architect & Open Source Creator.",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Dusk | Full-Stack Developer",
+    title: "Ashish Pramanik | Discord Bot Developer & Full-Stack Creator",
     description:
-      "Full-stack developer building modern web apps, REST APIs, and Discord bots.",
+      "Discord Bot Developer, Backend Architect & Open Source Creator.",
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
@@ -43,8 +41,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="font-sans antialiased bg-dark-500 text-white" suppressHydrationWarning>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <body className="font-sans antialiased bg-[#050510] text-white" suppressHydrationWarning>
         {children}
       </body>
     </html>
