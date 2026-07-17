@@ -19,10 +19,14 @@ import GlowingOrbs from "@/components/GlowingOrbs";
 import ParticleBackground from "@/components/ParticleBackground";
 import CustomCursor from "@/components/CustomCursor";
 import ScrollProgress from "@/components/ScrollProgress";
+import dynamic from "next/dynamic";
+
+const ThreeScene = dynamic(() => import("@/components/ThreeScene"), {
+  ssr: false,
+});
 
 function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [progress, setProgress] = useState(0);
-  const [phase, setPhase] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,7 +43,6 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
 
   useEffect(() => {
     if (progress >= 100) {
-      setPhase(1);
       setTimeout(() => onComplete(), 600);
     }
   }, [progress, onComplete]);
@@ -157,6 +160,7 @@ export default function Home() {
           <ScrollProgress />
           <GlowingOrbs />
           <ParticleBackground />
+          <ThreeScene />
           <CustomCursor />
           <Navbar />
           <main className="relative z-10">

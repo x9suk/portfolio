@@ -69,6 +69,27 @@ body {
   overflow-x: hidden;
 }
 
+.three-scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.62;
+  mix-blend-mode: screen;
+  mask-image: linear-gradient(to bottom, black 0%, black 56%, transparent 96%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 56%, transparent 96%);
+}
+
+.three-scene canvas {
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .three-scene {
+    opacity: 0.42;
+  }
+}
+
 ::selection {
   background: rgba(255, 45, 85, 0.3);
   color: #fff;
