@@ -11,10 +11,11 @@ import {
   SiTypescript, SiMongodb, SiPostgresql, SiRedis, SiTailwindcss,
   SiNextdotjs, SiJavascript, SiPrisma, SiDiscord, SiExpress,
 } from "react-icons/si";
+import type { IconType } from "react-icons";
 
 interface Tech {
   name: string;
-  icon: React.ElementType;
+  icon: IconType;
   orbit: number;
   speed: number;
   size: number;
