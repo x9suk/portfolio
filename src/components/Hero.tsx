@@ -35,6 +35,14 @@ export default function Hero() {
     >
       <div className="absolute inset-0 grid-bg opacity-30" />
 
+      <div
+        className="absolute left-1/2 top-1/2 h-[min(74vw,42rem)] w-[min(74vw,42rem)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-red-400/[0.07] shadow-[0_0_120px_rgba(255,45,85,0.07)]"
+        aria-hidden="true"
+      >
+        <div className="absolute inset-[8%] rounded-full border border-violet-400/[0.06] border-dashed animate-spin-slow" />
+        <div className="absolute -right-1 top-1/2 h-2 w-2 rounded-full bg-red-400 shadow-[0_0_18px_rgba(255,45,85,0.9)]" />
+      </div>
+
       {/* Animated gradient mesh */}
       <div className="absolute inset-0">
         <motion.div
